@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/todo", consumes = {"application/json"})
 @Slf4j
 public class TodoController {
     // This is an in-memory store for the purposes of this example.
