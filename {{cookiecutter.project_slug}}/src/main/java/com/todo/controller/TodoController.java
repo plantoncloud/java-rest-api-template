@@ -7,12 +7,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @Slf4j
 public class TodoController {
+
+    // this is for demo purposes. remove it when using for production use.
+    private static HashMap<String, String> defaultRoutes;
+    static {
+        defaultRoutes = new HashMap<String, String>();
+        defaultRoutes.put("GET", "/todos");
+        defaultRoutes.put("GET", "/todos/{id}");
+        defaultRoutes.put("POST", "/todos");
+        defaultRoutes.put("PUT", "/todos/{id}");
+        defaultRoutes.put("DELETE", "/todos/{id}");
+    }
     // This is an in-memory store for the purposes of this example.
     // You would typically use a database like MySQL or MongoDB in a real app.
     private static List<Todo> todos = new ArrayList<>();
@@ -20,6 +33,11 @@ public class TodoController {
     static {
         todos.add(new Todo(1, "Learn Java", false));
         todos.add(new Todo(2, "Learn Spring Boot", false));
+    }
+
+    @GetMapping("/")
+    public Map<String, String> getDefaultRoutes() {
+        return defaultRoutes;
     }
 
     @GetMapping("/todos")
@@ -48,7 +66,8 @@ public class TodoController {
     }
 
     @PutMapping("/todos/{id}")
-    public Todo updateTodo(@PathVariable int id, @RequestBody Todo todo) throws TodoNotFoundException, InvalidTodoException {
+    public Todo updateTodo(@PathVariable int id, @RequestBody Todo todo)
+            throws TodoNotFoundException, InvalidTodoException {
         Optional<Todo> existingTodo = todos.stream().filter(t -> t.getId() == id).findFirst();
         if (!existingTodo.isPresent()) {
             throw new TodoNotFoundException();
